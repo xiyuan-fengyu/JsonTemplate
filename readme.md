@@ -47,8 +47,8 @@ json 模板
 参数：
 ```json
 {
-    someMap: {min: 1, max: 10},
-    someArray: [1, 2, 3]
+    "someMap": {"min": 1, "max": 10},
+    "someArray": [1, 2, 3]
 }
 ```
 解析结果：
@@ -90,9 +90,76 @@ json 模板
 ```
 
 ## 语法
-@TODO
+### ${}
+直接以括号中的字符串作为值
+例如
+```
+{
+    "${test}": "123"
+}
+```
+解析后
+```
+{
+    "test": "123"
+}
+```
 
+### #{exp}
+exp 会通过js eval计算出当前上下文情况下的值
+如果作为 key时，值为null，直接忽略这个键，不计算value
 
+```
+{
+    "#{user.id ? 'id' : null}": "#{'id_' + user.id}",
+    "#{user.name ? 'name' : null}": "#{user.name}",
+    "sex": "#{user.sex === 0 ? 'boy' : 'girl'}"
+}
+```
+参数
+```
+{
+    "user": {
+        "id": 123,
+        "sex": 0
+    }
+}
+```
+解析后
+```
+{
+    "id": "id_123",
+    "sex": "boy"
+}
+```
+
+### #{if (con)}, #{else if (con)}, #{else}
+```
+{
+    "#{if (age <= 18)}": "少年",
+    "#{else if (age <= 35)}": "青年",
+    "#{else if (age <= 55)}": "中年",
+    "#{else}": "老年"
+}
+```
+参数
+```
+{
+    "age": 27 
+}
+```
+解析后
+```
+"青年"
+```
+
+### #{for (keyOrIndex, value) of arrayOrMap}
+
+### #{flatArray}, #{flatArray((index, value) => bool)}
+
+### #{flatMap}, #{flatMap((key, value) => bool)}
+
+### #{define(name)}
 
 
 
