@@ -1,0 +1,39 @@
+{
+  "${#{rawStr}}": "${${test raw str}}",
+  "exp_test": {
+    "#{someMap.min != null ? '$gte' : null}": "#{someMap.min}",
+    "#{someMap.max != null ? '$lte' : null}": "#{someMap.max}"
+  },
+  "#{set(testSetVar)}": "#{'just test ' + 123}",
+  "#{testSetVar + ' key'}": "#{testSetVar + ' value'}",
+  "random": "#{parseInt('' + Math.random() * 1000)}",
+  "test if": {
+    "#{if (someMap.min < 5)}": "someMap.min < 5",
+    "#{else if (someMap.min == 5)}": "someMap.min == 5",
+    "#{else}": "someMap.min > 5"
+  },
+  "for_array": {
+    "#{for (index, item) of someArray}": {
+      "#{if (index % 2 == 0)}": "#{index + '_' + item}"
+    }
+  },
+  "for_map": {
+    "#{for (key, value) of {'id': 123, 'name': 'Tom'}}": {
+      "#{key}": "#{value}"
+    }
+  },
+  "#{flatMap((key, value) => key.match('id|name'))}": {
+    "id": 123,
+    "name": "Tom",
+    "age": 15
+  },
+  "testFlatArray": [
+    1,
+    2,
+    {
+      "#{set(temp)}": "#{'' + new Date()}",
+      "#{flatArray}": [3, 4, 5, "#{testSetVar}", "#{temp}"]
+    },
+    6
+  ]
+}
