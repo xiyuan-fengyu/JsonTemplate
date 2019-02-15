@@ -26,16 +26,6 @@ public class JsonTemplate {
 
         v8 = V8.createV8Runtime();
         v8.add("__release__", true);
-        v8.registerJavaMethod((v8Object, v8Array) -> {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0, len = v8Array.length(); i < len; i++) {
-                builder.append(v8Array.get(i));
-                if (i + 1 != len) {
-                    builder.append(", ");
-                }
-            }
-            System.out.println(builder.toString());
-        }, "print");
         fillTemplateStr = (V8Function) v8.executeScript(jsonTemplateJs, "JsonTemplate.js", 1);
     }
 

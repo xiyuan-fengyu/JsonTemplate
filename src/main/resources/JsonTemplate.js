@@ -3,10 +3,6 @@
 
     const globalCtx = typeof global === "undefined" ? this : global;
 
-    if (typeof print === "undefined") {
-        globalCtx.print = console.log;
-    }
-
     const ignoreObj = {
         desc: "ignore this obj"
     };
@@ -30,8 +26,30 @@
         else if (str.startsWith("[") && str.endsWith("]")) {
             str = "(" + str + ")";
         }
-        Object.assign(globalCtx, ctx);
-        return eval(str);
+
+        // 存储环境旧值
+        const oldValues = {};
+        for (let key of Object.keys(ctx)) {
+            const oldV = globalCtx[key];
+            const newV = ctx[key];
+            if (oldV !== newV) {
+                globalCtx[key] = newV;
+                oldValues[key] = oldV;
+            }
+        }
+        // 计算表达式
+        const res = eval(str);
+        // 恢复环境旧值
+        for (let key of Object.keys(oldValues)) {
+            const oldValue = oldValues[key];
+            if (oldValue === undefined) {
+                delete globalCtx[key];
+            }
+            else {
+                globalCtx[key] = oldValue;
+            }
+        }
+        return res;
     }
 
     function copyCtx(ctx) {
@@ -421,7 +439,11 @@
     }
 
     function fillTemplateStr(templateStr, ctx) {
-        return JSON.stringify(fill(JSON.parse(templateStr), ctx), null, 4);
+        const res = JSON.stringify(fill(JSON.parse(templateStr), ctx), null, 4);
+        if (flatArrays.length > 0) {
+            flatArrays.splice(0, flatArrays.length);
+        }
+        return res;
     }
 
     // test
@@ -471,7 +493,7 @@
             someMap: {min: 1, max: 10},
             someArray: [1, 2, 3]
         });
-        print(res);
+        console.log(res);
     }
 
     return fillTemplateStr;

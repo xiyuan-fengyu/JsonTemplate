@@ -1,5 +1,6 @@
 # JsonTemplate
 使用 json模板 + 参数，动态解析为新的 json 数据  
+不同的平台，需要在 pom.xml 中修改使用对应的 j2v8 包  
 
 ## 例子
 json 模板
@@ -154,12 +155,16 @@ exp 会通过js eval计算出当前上下文情况下的值
 ```
 
 ### #{for (keyOrIndex, value) of arrayOrMap}
+遍历array或map，生成一个数组
 
 ### #{flatArray}, #{flatArray((index, value) => bool)}
+将一个数组中的元素展开到外层数组中，如果外层不是数组，则没有展开效果
 
 ### #{flatMap}, #{flatMap((key, value) => bool)}
+将map中的键值展开到key所在的map中
 
 ### #{define(name)}
+在当前上下文范围内定义一个临时变量
 
 
 
