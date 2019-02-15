@@ -1,0 +1,4 @@
+{
+    "${some raw string}": "${#{this is not a exp}}",
+    "${1 + 2}": "${${this is not a exp}}"
+}

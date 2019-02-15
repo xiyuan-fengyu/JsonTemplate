@@ -1,0 +1,6 @@
+{
+    "id": "#{id}",
+    "name": "#{name}",
+    "sex": "#{$('sex') === 'girl' ? 0 : 1}",
+    "#{_('phone') ? 'phone' : null}": "#{phone}"
+}

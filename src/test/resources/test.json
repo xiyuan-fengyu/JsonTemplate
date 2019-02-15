@@ -6,7 +6,6 @@
   },
   "#{set(testSetVar)}": "#{'just test ' + 123}",
   "#{testSetVar + ' key'}": "#{testSetVar + ' value'}",
-  "random": "#{parseInt('' + Math.random() * 1000)}",
   "test if": {
     "#{if (someMap.min < 5)}": "someMap.min < 5",
     "#{else if (someMap.min == 5)}": "someMap.min == 5",

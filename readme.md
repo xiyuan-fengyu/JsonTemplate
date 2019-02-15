@@ -91,46 +91,59 @@ json 模板
 ```
 
 ## 语法
+各种语法的例子可以在 src/test/resources/tests 目录下找到  
+
 ### ${}
 直接以括号中的字符串作为值
 例如
+模板
 ```
 {
-    "${test}": "123"
+    "${some raw string}": "${#{this is not a exp}}",
+    "${1 + 2}": "${${this is not a exp}}"
 }
+```
+参数
+```
+{}
 ```
 解析后
 ```
 {
-    "test": "123"
+    "some raw string": "#{this is not a exp}",
+    "1 + 2": "${this is not a exp}"
 }
 ```
 
 ### #{exp}
 exp 会通过js eval计算出当前上下文情况下的值
-如果作为 key时，值为null，直接忽略这个键，不计算value
-
+作为 key时，如果计算结果为null，直接忽略这个键，不计算value
+exp 中可以通过 $(expStr) 来尝试获取 expStr 执行后的值，如果执行报错，返回 undefined
+exp 中可以通过 _(expStr) 来尝试获取 expStr 执行后的值是否不为 null 或 undefined，如果执行报错，返回 false
 ```
 {
-    "#{user.id ? 'id' : null}": "#{'id_' + user.id}",
-    "#{user.name ? 'name' : null}": "#{user.name}",
-    "sex": "#{user.sex === 0 ? 'boy' : 'girl'}"
+    "id": "#{id}",
+    "name": "#{name}",
+    "sex": "#{$('sex') === 'girl' ? 0 : 1}",
+    "#{_('phone') ? 'phone' : null}": "#{phone}"
 }
 ```
 参数
 ```
 {
-    "user": {
-        "id": 123,
-        "sex": 0
-    }
+    "id": 1,
+    "name": "Jin",
+    "sex": "girl",
+    "phone": "18912345678"
 }
 ```
 解析后
 ```
 {
-    "id": "id_123",
-    "sex": "boy"
+    "id": 1,
+    "name": "Jin",
+    "sex": 0,
+    "phone": "18912345678"
 }
 ```
 
@@ -156,14 +169,98 @@ exp 会通过js eval计算出当前上下文情况下的值
 
 ### #{for (keyOrIndex, value) of arrayOrMap}
 遍历array或map，生成一个数组
+模板
+```
+{
+    "#{for (index, value) of arr}": {
+        "index": "#{index}",
+        "value": "#{value}"
+    }
+}
+```
+参数
+```
+{
+    "arr": [
+        "a",
+        "b"
+    ]
+}
+```
+解析后
+```
+[
+    {
+        "index": 0,
+        "value": "a"
+    },
+    {
+        "index": 1,
+        "value": "b"
+    }
+]
+```
 
 ### #{flatArray}, #{flatArray((index, value) => bool)}
 将一个数组中的元素展开到外层数组中，如果外层不是数组，则没有展开效果
+模板
+```
+[
+    0,
+    1,
+    {
+        "#{flatArray((index, value) => value % 2 === 0)}": [2, 3, 4]
+    },
+    5
+]
+```
+参数
+```
+{}
+```
+解析后
+```
+[
+    0,
+    1,
+    2,
+    4,
+    5
+]
+```
 
 ### #{flatMap}, #{flatMap((key, value) => bool)}
 将map中的键值展开到key所在的map中
+模板
+```
+{
+    "id": 1,
+    "#{flatMap}": "#{user}",
+    "version": 0
+}
+```
+参数
+```
+{
+    "user": {
+        "name": "Tom",
+        "age": 25,
+        "sex": "boy"
+    }
+}
+```
+解析后
+```
+{
+    "id": 1,
+    "name": "Tom",
+    "age": 25,
+    "sex": "boy",
+    "version": 0
+}
+```
 
-### #{define(name)}
+### #{set(name)}
 在当前上下文范围内定义一个临时变量
 
 

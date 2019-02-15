@@ -3,9 +3,7 @@
 
     const globalCtx = typeof global === "undefined" ? this : global;
 
-    const ignoreObj = {
-        desc: "ignore this obj"
-    };
+    const ignoreObj = undefined;
 
     const flatArrays = [];
 
@@ -16,6 +14,24 @@
 
     function isFlatArray(obj) {
         return obj instanceof Array && flatArrays.indexOf(obj) > -1;
+    }
+
+    function $(str) {
+        try {
+            return eval(str);
+        }
+        catch (e) {
+            return undefined;
+        }
+    }
+
+    function _(str) {
+        try {
+            return eval(str) != null;
+        }
+        catch (e) {
+            return false;
+        }
     }
 
     function evalWithCtx(ctx, str) {
@@ -485,7 +501,8 @@
       "#{set(temp)}": "#{'' + new Date()}",
       "#{flatArray}": [3, 4, 5, "#{testSetVar}", "#{temp}"]
     },
-    6
+    6,
+    "#{$('notDefinedVar')}"
   ]
 }
 `;

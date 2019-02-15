@@ -1,0 +1,6 @@
+{
+    "#{for (index, value) of arr}": {
+        "index": "#{index}",
+        "value": "#{value}"
+    }
+}
