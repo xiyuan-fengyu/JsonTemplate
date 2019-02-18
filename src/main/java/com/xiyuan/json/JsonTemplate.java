@@ -7,6 +7,7 @@ import com.eclipsesource.v8.utils.V8ObjectUtils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,6 +44,17 @@ public class JsonTemplate {
 
     public static String fill(String template, Map<String, Object> params) {
         return (String) fillTemplateStr.call(null, new V8Array(v8).push(template).push(V8ObjectUtils.toV8Object(v8, params)));
+    }
+
+    public static String fill(String template, Object ...params) {
+        Map<String, Object> paramMap = null;
+        if (params != null && params.length > 0) {
+            paramMap = new HashMap<>();
+            for (int i = 0, len = params.length; i < len; i++) {
+                paramMap.put("$" + i, params[i]);
+            }
+        }
+        return fill(template, paramMap);
     }
 
 }
