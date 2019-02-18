@@ -32,13 +32,13 @@ public class JsonTemplateTest {
 
     @Test
     public void test() {
-//        executeTest("tests/0/");
-//        executeTest("tests/1/");
-//        executeTest("tests/2/");
-//        executeTest("tests/3/");
-//        executeTest("tests/4/");
-//        executeTest("tests/5/");
-//        executeTest("tests/6/");
+        executeTest("tests/0/");
+        executeTest("tests/1/");
+        executeTest("tests/2/");
+        executeTest("tests/3/");
+        executeTest("tests/4/");
+        executeTest("tests/5/");
+        executeTest("tests/6/");
         executeTest("tests/7/");
     }
 

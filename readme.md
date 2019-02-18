@@ -116,10 +116,10 @@ json 模板
 ```
 
 ### #{exp}
-exp 会通过js eval计算出当前上下文情况下的值
-作为 key时，如果计算结果为null，直接忽略这个键，不计算value
-exp 中可以通过 $(expStr) 来尝试获取 expStr 执行后的值，如果执行报错，返回 undefined
-exp 中可以通过 _(expStr) 来尝试获取 expStr 执行后的值是否不为 null 或 undefined，如果执行报错，返回 false
+exp 会通过js eval计算出当前上下文情况下的值  
+作为 key时，如果计算结果为null，直接忽略这个键，不计算value  
+exp 中可以通过 $(expStr) 来尝试获取 expStr 执行后的值，如果执行报错，返回 undefined  
+exp 中可以通过 _(expStr) 来尝试获取 expStr 执行后的值是否不为 null 或 undefined，如果执行报错，返回 false  
 ```
 {
     "id": "#{id}",
@@ -262,7 +262,48 @@ exp 中可以通过 _(expStr) 来尝试获取 expStr 执行后的值是否不为
 
 ### #{set(name)}
 在当前上下文范围内定义一个临时变量
-
+模板
+```
+{
+    "a": "#{'id = ' + $('id')}",
+    "#{set(id)}": 1,
+    "b": "#{'id = ' + id}",
+    "sub": {
+        "c": "#{'id = ' + id}",
+        "#{set(id)}": 2,
+        "d": "#{'id = ' + id}"
+    },
+    "e": "#{'id = ' + id}",
+    "#{set(arr)}": [],
+    "f": "#{arr.slice()}",
+    "#{set(useless)}": {
+        "#{for (index, item) of [1, 2, 3]}": "#{arr.push(item)}"
+    },
+    "g": "#{arr.slice()}"
+}
+```
+参数
+```
+{}
+```
+解析后
+```
+{
+    "a": "id = undefined",
+    "b": "id = 1",
+    "sub": {
+        "c": "id = 1",
+        "d": "id = 2"
+    },
+    "e": "id = 1",
+    "f": [],
+    "g": [
+        1,
+        2,
+        3
+    ]
+}
+```
 
 
 
