@@ -72,10 +72,12 @@ public class JsonTemplate {
             if (in.read(bytes) > 0) {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
+            else {
+                throw new RuntimeException("read fail: " + path + ", file is empty");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("read fail: " + path, e);
         }
-        return null;
     }
 
     public static String fill(String template, Map<String, Object> params) {
