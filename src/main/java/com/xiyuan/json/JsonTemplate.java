@@ -24,9 +24,6 @@ public class JsonTemplate {
 
     static {
         String jsonTemplateJs = readFromResource("JsonTemplate.js");
-        if (jsonTemplateJs == null) {
-            throw new IllegalStateException("JsonTemplate.js is missing");
-        }
 
         Thread thread = new Thread(() -> {
             // 创建一个临时文件夹，防止多个应用解压出来的 lib 文件路径一致，导致文件占用，无法正常删除和写入
